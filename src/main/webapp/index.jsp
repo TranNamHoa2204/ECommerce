@@ -1,11 +1,12 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="entity.User" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Giữ nguyên các liên kết CSS của bạn -->
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <title>LapTop Selling Website</title>
 </head>
@@ -32,14 +33,40 @@
                         <i class="fa-solid fa-cart-shopping"></i>
                         Giỏ hàng
                     </a>
-                    <a href="/ECommerce/user?action=login" class="btn-link">
-                        <i class="fa-solid fa-user"></i>
-                        Đăng nhập
-                    </a>
-                    <a href="/ECommerce/user?action=register" class="btn-link">
-                        <i class="fa-solid fa-user-plus"></i>
-                        Đăng ký
-                    </a>
+                    <%
+                        User currentUser = (User) session.getAttribute("currentUser");
+                        if (currentUser != null) {
+                    %>
+                        <div class="dropdown">
+                            <button class="btn-link dropdown-toggle border-0 bg-transparent"
+                                    data-bs-toggle="dropdown">
+                                <i class="fa-solid fa-user"></i>
+                                <%= currentUser.getFullName() %>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">Tài khoản của tôi</a></li>
+                                <li><a class="dropdown-item" href="#">Đơn hàng</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger"
+                                       href="${pageContext.request.contextPath}/user?action=logout">
+                                    Đăng xuất
+                                </a></li>
+                            </ul>
+                        </div>
+                    <%
+                        } else {
+                    %>
+                        <a href="${pageContext.request.contextPath}/user?action=login" class="btn-link">
+                            <i class="fa-solid fa-user"></i>
+                            Đăng nhập
+                        </a>
+                        <a href="${pageContext.request.contextPath}/user?action=register" class="btn-link">
+                            <i class="fa-solid fa-user-plus"></i>
+                            Đăng ký
+                        </a>
+                    <%
+                        }
+                    %>
                 </div>
             </div>
         </div>
@@ -907,7 +934,7 @@
 
     <footer class="web-footer"></footer>
     
-    <script src="../js/bootstrap.bundle.min.js"></script>
-    <script src="../js/index.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/index.js"></script>
 </body>
 </html>
