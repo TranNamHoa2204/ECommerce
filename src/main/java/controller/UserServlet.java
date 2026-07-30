@@ -39,7 +39,7 @@ public class UserServlet extends HttpServlet {
             default         -> resp.sendRedirect(req.getContextPath() + "/");
         }
     }
-
+    
     /**
      * POST /user?action=login    → xử lý đăng nhập
      * POST /user?action=register → xử lý đăng ký
