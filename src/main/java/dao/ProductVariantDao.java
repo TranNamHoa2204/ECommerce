@@ -17,13 +17,16 @@ public class ProductVariantDao {
     // 1. Lấy danh sách biến thể theo ID sản phẩm
     public List<ProductVariant> getVariantsByProductId(long productId) {
         List<ProductVariant> list = new ArrayList<>();
-        String sql = "SELECT * FROM ProductVariant WHERE product_id = ? ORDER BY price ASC";
+        String sql = "SELECT v.*, p.name AS product_name "
+                + "FROM ProductVariant v "
+                + "INNER JOIN [Product] p ON v.product_id = p.product_id "
+                + "WHERE v.product_id = ? ORDER BY v.price ASC";
         try (Connection conn = ConnectDB.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, productId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    return helper(rs);
+                    list.add(helper(rs));
                 }
             }
         } catch (SQLException e) {
@@ -65,6 +68,7 @@ public class ProductVariantDao {
 
     // 3. Tìm biến thể
     public List<ProductVariant> findVariant(long productId, String size, String color) {
+        List <ProductVariant> list = new ArrayList<>();
         String sql = "SELECT v.*, p.name AS product_name "
                 + "FROM ProductVariant v "
                 + "INNER JOIN [Product] p ON v.product_id = p.product_id "
@@ -79,24 +83,23 @@ public class ProductVariantDao {
             
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    return helper(rs);
+                    list.add(helper(rs));
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Lỗi khi tìm biến thể sản phẩm", e);
         }
-        return null; 
+        return list; 
     }
     
-    public List<ProductVariant> helper(ResultSet rs){
-        List<ProductVariant> list = new ArrayList<>();
+    public ProductVariant helper(ResultSet rs){
         try {
             Product product = new Product();
             product.setProductId(rs.getLong("product_id"));
             product.setName(rs.getNString("product_name"));
             
             // Tạo và trả về ProductVariant
-            list.add(new ProductVariant(
+            return new ProductVariant(
                 rs.getLong("variant_id"),
                 product,
                 rs.getString("size"),          
@@ -104,10 +107,9 @@ public class ProductVariantDao {
                 rs.getBigDecimal("price"),
                 rs.getInt("stock"),
                 rs.getString("sku")
-            ));
+            );
         } catch (SQLException e) {
             throw new RuntimeException("Lỗi khi tìm biến thể");
         }
-        return list;
     }
 }

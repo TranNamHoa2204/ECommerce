@@ -88,7 +88,7 @@ public class ProductDao {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT p.*, c.name AS category_name, c.description AS category_desc, b.name AS brand_name "
                    + "FROM [Product] p "
-                   + "LEFT JOIN Category c ON p.brand_id = b.brand_id "
+                   + "LEFT JOIN Category c ON p.category_id = c.category_id "
                    + "LEFT JOIN Brand b ON p.brand_id = b.brand_id "
                    + "WHERE p.brand_id = ? AND p.status = 1 "
                    + "ORDER BY p.created_at DESC";

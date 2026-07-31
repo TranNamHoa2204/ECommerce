@@ -78,7 +78,7 @@ public class AddressDao {
             ps.setNString(4, address.getProvince());
             ps.setNString(5, address.getDistrict());
             ps.setNString(6, address.getWard());
-            ps.setNString(7, address.getDetail_address());
+            ps.setNString(7, address.getDetailAddress());
             ps.setBoolean(8, address.isDefault());
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
@@ -98,7 +98,7 @@ public class AddressDao {
             ps.setNString(3, address.getProvince());
             ps.setNString(4, address.getDistrict());
             ps.setNString(5, address.getWard());
-            ps.setNString(6, address.getDetail_address());
+            ps.setNString(6, address.getDetailAddress());
             ps.setBoolean(7, address.isDefault());
             ps.setLong(8, address.getAddressId());
             return ps.executeUpdate() > 0;
