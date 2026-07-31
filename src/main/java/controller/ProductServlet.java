@@ -97,7 +97,7 @@ public class ProductServlet extends HttpServlet{
             String color = req.getParameter("color");
 
             List<ProductVariant> list = productVariantService.findVariant(id, size, color);
-            req.setAttribute("listProducts", list);
+            req.setAttribute("listVariants", list);
             req.getRequestDispatcher("/WEB-INF/views/listProducts.jsp").forward(req, resp);
         } catch (NumberFormatException e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
