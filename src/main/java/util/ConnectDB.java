@@ -1,18 +1,25 @@
 package util;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 
 public class ConnectDB {
-	private static final String username = "sa";
-	private static final String password = "sapassword";
-	private static final String url = "jdbc:sqlserver://localhost:1433;databaseName=QLBanHangOnline;encrypt=true;trustServerCertificate=true";
-	private static Connection connection = null;
-	
-	public static Connection getConnection() throws SQLException {
-		return DriverManager.getConnection(url, username, password);
-	}
-	
-	// Sau này chỉ cần: Connection con = DBConnection.getConnection();
+
+    private static DataSource dataSource;
+
+    static {
+        try {
+            Context ctx = new InitialContext();
+            dataSource = (DataSource) ctx.lookup("java:comp/env/jdbc/ECommerceDB");
+        } catch (Exception e) {
+            throw new RuntimeException("Không thể khởi tạo DataSource", e);
+        }
+    }
+
+    public static Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
+    }
 }

@@ -32,7 +32,7 @@ public class ProductService {
     }
 
     public List<Product> searchProductsByName(String keyword){
-        if(keyword.isEmpty()){
+        if(keyword == null || keyword.isBlank()){
             return productDao.getAllActiveProducts();
         }
         List<Product> products = productDao.searchProductsByName(keyword);
