@@ -3,7 +3,7 @@ package entity;
 public class CartItem {
 	private long cartItemId;
 	private Cart cart;
-	private ProductVariant variantId;
+	private ProductVariant variant;
 	private int quantity;
 	public long getCartItemId() {
 		return cartItemId;
@@ -17,11 +17,11 @@ public class CartItem {
 	public void setCart(Cart cart) {
 		this.cart = cart;
 	}
-	public ProductVariant getVariantId() {
-		return variantId;
+	public ProductVariant getVariant() {
+		return variant;
 	}
-	public void setVariantId(ProductVariant variantId) {
-		this.variantId = variantId;
+	public void setVariant(ProductVariant variant) {
+		this.variant = variant;
 	}
 	public int getQuantity() {
 		return quantity;
@@ -29,11 +29,11 @@ public class CartItem {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	public CartItem(long cartItemId, Cart cart, ProductVariant variantId, int quantity) {
+	public CartItem(long cartItemId, Cart cart, ProductVariant variant, int quantity) {
 		super();
 		this.cartItemId = cartItemId;
 		this.cart = cart;
-		this.variantId = variantId;
+		this.variant = variant;
 		this.quantity = quantity;
 	}
 	public CartItem() {

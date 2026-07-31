@@ -8,8 +8,9 @@ public class Address {
 	private String province;
 	private String district;
 	private String ward;
-	private String detail_address;
+	private String detailAddress;
 	private boolean isDefault;
+	
 	public long getAddressId() {
 		return addressId;
 	}
@@ -52,11 +53,11 @@ public class Address {
 	public void setWard(String ward) {
 		this.ward = ward;
 	}
-	public String getDetail_address() {
-		return detail_address;
+	public String getDetailAddress() {
+		return detailAddress;
 	}
-	public void setDetail_address(String detail_address) {
-		this.detail_address = detail_address;
+	public void setDetailAddress(String detailAddress) {
+		this.detailAddress = detailAddress;
 	}
 	public boolean isDefault() {
 		return isDefault;
@@ -65,7 +66,7 @@ public class Address {
 		this.isDefault = isDefault;
 	}
 	public Address(long addressId, User user, String receiverName, String phone, String province, String district,
-			String ward, String detail_address, boolean isDefault) {
+			String ward, String detailAddress, boolean isDefault) {
 		super();
 		this.addressId = addressId;
 		this.user = user;
@@ -74,7 +75,7 @@ public class Address {
 		this.province = province;
 		this.district = district;
 		this.ward = ward;
-		this.detail_address = detail_address;
+		this.detailAddress = detailAddress;
 		this.isDefault = isDefault;
 	}
 	public Address() {

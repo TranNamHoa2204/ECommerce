@@ -24,7 +24,7 @@ public class OrderDetail {
 	public ProductVariant getVariant() {
 		return variant;
 	}
-	public void setVariantId(ProductVariant variant) {
+	public void setVariant(ProductVariant variant) {
 		this.variant = variant;
 	}
 	public BigDecimal getPrice() {
