@@ -4,6 +4,7 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,21 +23,11 @@ public class ProductVariantDao {
             ps.setLong(1, productId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    Product p = new Product();
-                    p.setProductId(productId);
-
-                    list.add(new ProductVariant(
-                            rs.getLong("variant_id"),
-                            p,
-                            rs.getString("size"),
-                            rs.getNString("color"),
-                            rs.getBigDecimal("price"),
-                            rs.getInt("stock"),
-                            rs.getString("sku")));
+                    return helper(rs);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return list;
     }
@@ -66,9 +57,57 @@ public class ProductVariantDao {
                             rs.getString("sku"));
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return null;
+    }
+
+    // 3. Tìm biến thể
+    public List<ProductVariant> findVariant(long productId, String size, String color) {
+        String sql = "SELECT v.*, p.name AS product_name "
+                + "FROM ProductVariant v "
+                + "INNER JOIN [Product] p ON v.product_id = p.product_id "
+                + "WHERE p.product_id = ? AND v.size = ? AND v.color = ?";
+        
+        try (Connection conn = ConnectDB.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setLong(1, productId);
+            ps.setString(2, size);
+            ps.setNString(3, color); 
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    return helper(rs);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi tìm biến thể sản phẩm", e);
+        }
+        return null; 
+    }
+    
+    public List<ProductVariant> helper(ResultSet rs){
+        List<ProductVariant> list = new ArrayList<>();
+        try {
+            Product product = new Product();
+            product.setProductId(rs.getLong("product_id"));
+            product.setName(rs.getNString("product_name"));
+            
+            // Tạo và trả về ProductVariant
+            list.add(new ProductVariant(
+                rs.getLong("variant_id"),
+                product,
+                rs.getString("size"),          
+                rs.getNString("color"),        
+                rs.getBigDecimal("price"),
+                rs.getInt("stock"),
+                rs.getString("sku")
+            ));
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi tìm biến thể");
+        }
+        return list;
     }
 }

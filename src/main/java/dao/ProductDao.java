@@ -1,7 +1,5 @@
 package dao;
 
-
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -85,7 +83,31 @@ public class ProductDao {
         return list;
     }
 
-    // 4. Tìm kiếm sản phẩm theo tên
+    // 4. Lấy sản phẩm theo hãng (Brand ID)
+    public List<Product> getProductsByBrandId(long brandId) {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT p.*, c.name AS category_name, c.description AS category_desc, b.name AS brand_name "
+                   + "FROM [Product] p "
+                   + "LEFT JOIN Category c ON p.brand_id = b.brand_id "
+                   + "LEFT JOIN Brand b ON p.brand_id = b.brand_id "
+                   + "WHERE p.brand_id = ? AND p.status = 1 "
+                   + "ORDER BY p.created_at DESC";
+
+        try (Connection conn = ConnectDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, brandId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapResultSetToProduct(rs));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // 5. Tìm kiếm sản phẩm theo tên
     public List<Product> searchProductsByName(String keyword) {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT p.*, c.name AS category_name, c.description AS category_desc, b.name AS brand_name "

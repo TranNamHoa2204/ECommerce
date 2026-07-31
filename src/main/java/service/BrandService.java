@@ -8,7 +8,7 @@ import entity.Brand;
 
 
 public class BrandService {
-    private BrandDao brandDao = new BrandDao();
+    private final BrandDao brandDao = new BrandDao();
 
     public List<Brand> getAllBrands(){
         List<Brand> brands = brandDao.getAllBrands();

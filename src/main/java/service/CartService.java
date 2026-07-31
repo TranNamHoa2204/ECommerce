@@ -8,7 +8,7 @@ import entity.CartItem;
 
 
 public class CartService {
-    private CartDao cartDao = new CartDao();
+    private final CartDao cartDao = new CartDao();
 
     public Cart getCartByUserId(long userId) {
         Cart cart = cartDao.getCartByUserId(userId);

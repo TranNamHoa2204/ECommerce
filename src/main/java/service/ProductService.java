@@ -7,18 +7,18 @@ import entity.Product;
 
 
 public class ProductService {
-    ProductDao productDao = new ProductDao();
+    private final ProductDao  productDao = new ProductDao();
 
     public List<Product> getAllProducts(){
         return productDao.getAllActiveProducts();
     }
 
     public Product getProductById(long id){
-        Product product = productDao.getProductById(id);
-        if(product == null){
+        Product products = productDao.getProductById(id);
+        if(products == null){
             throw new RuntimeException("Không tìm thấy sản phẩm");
         }
-        return product;
+        return products;
     }
 
     public List<Product> getProductsByCategoryId(long categoryId){
@@ -26,8 +26,18 @@ public class ProductService {
         return products;
     }
 
+    public List<Product> getProductsByBrandId(long brandId){
+        List<Product> products = productDao.getProductsByBrandId(brandId);
+        return products;
+    }
+
     public List<Product> searchProductsByName(String keyword){
+        if(keyword.isEmpty()){
+            return productDao.getAllActiveProducts();
+        }
         List<Product> products = productDao.searchProductsByName(keyword);
         return products;
     }
+
+    
 }

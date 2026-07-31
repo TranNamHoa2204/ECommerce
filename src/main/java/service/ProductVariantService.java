@@ -18,4 +18,9 @@ public class ProductVariantService {
         return productVariantDao.getVariantById(variantId);
     }
     
+    public List<ProductVariant> findVariant(long proudctId, String size, String color){
+        List<ProductVariant> list = productVariantDao.findVariant(proudctId, size, color);
+        return list;
+    }
+
 }
