@@ -10,7 +10,7 @@ import entity.User;
 
 
 public class ReviewService {
-    private ReviewDao reviewDao = new ReviewDao();
+    private final ReviewDao reviewDao = new ReviewDao();
 
     // Lấy tất cả đánh giá của một sản phẩm
     public List<Review> getReviewsByProductId(long productId) {

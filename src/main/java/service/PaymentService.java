@@ -5,7 +5,7 @@ import entity.Order;
 import entity.Payment;
 
 public class PaymentService {
-    private PaymentDao paymentDao = new PaymentDao();
+    private final PaymentDao paymentDao = new PaymentDao();
 
     // Tạo bản ghi thanh toán sau khi đặt hàng thành công
     public void createPayment(long orderId, String method) {

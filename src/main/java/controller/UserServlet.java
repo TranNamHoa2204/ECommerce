@@ -16,11 +16,6 @@ public class UserServlet extends HttpServlet {
 
     private final UserService userService = new UserService();
 
-    /**
-     * GET /user?action=login      → hiển thị form đăng nhập
-     * GET /user?action=register   → hiển thị form đăng ký
-     * GET /user?action=logout     → đăng xuất, về trang chủ
-     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -40,10 +35,6 @@ public class UserServlet extends HttpServlet {
         }
     }
     
-    /**
-     * POST /user?action=login    → xử lý đăng nhập
-     * POST /user?action=register → xử lý đăng ký
-     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -59,9 +50,6 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Đăng nhập
-    // -------------------------------------------------------------------------
     private void handleLogin(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
@@ -91,9 +79,6 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Đăng ký
-    // -------------------------------------------------------------------------
     private void handleRegister(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
@@ -116,7 +101,6 @@ public class UserServlet extends HttpServlet {
         try {
             userService.dangKy(fullName, email, password, phone);
 
-            // Đăng ký thành công → về trang login kèm thông báo
             resp.sendRedirect(req.getContextPath() + "/user?action=login&registered=true");
 
         } catch (RuntimeException e) {

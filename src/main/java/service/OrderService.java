@@ -6,7 +6,7 @@ import dao.OrderDao;
 import entity.Order;
 import entity.OrderDetail;
 public class OrderService {
-    private OrderDao orderDao = new OrderDao();
+    private final OrderDao orderDao = new OrderDao();
 
     public List<Order> getOrdersByUserId(long userId) {
         return orderDao.getOrdersByUserId(userId);

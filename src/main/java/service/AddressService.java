@@ -9,7 +9,7 @@ import entity.User;
 
 
 public class AddressService {
-    private AddressDao addressDao = new AddressDao();
+    private final AddressDao addressDao = new AddressDao();
 
     // Lấy tất cả địa chỉ của user
     public List<Address> getAddressesByUserId(long userId) {
