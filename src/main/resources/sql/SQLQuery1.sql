@@ -46,8 +46,10 @@ CREATE TABLE [Product](
 CREATE TABLE ProductImage(
     image_id BIGINT PRIMARY KEY IDENTITY(1,1),
     product_id BIGINT NOT NULL,
+    color NVARCHAR(30),           -- Màu sắc tương ứng của ảnh (dùng để lọc ảnh khi user chọn variant)
     image_url VARCHAR(255) NOT NULL,
-    is_main BIT DEFAULT 0,
+    display_order INT DEFAULT 1,  -- Thứ tự hiển thị trong gallery của màu đó
+    is_main BIT DEFAULT 0,        -- Ảnh đại diện của màu (display_order = 1)
     
     CONSTRAINT FK_ProductImage_Product FOREIGN KEY (product_id) REFERENCES [Product](product_id) ON DELETE CASCADE
 );
@@ -115,8 +117,7 @@ CREATE TABLE [Order](
     created_at DATETIME DEFAULT GETDATE(),
 
     CONSTRAINT FK_Order_User FOREIGN KEY ([user_id]) REFERENCES [User]([user_id]),
-    CONSTRAINT FK_Order_Address FOREIGN KEY (address_id) REFERENCES [Address](address_id),
-	
+    CONSTRAINT FK_Order_Address FOREIGN KEY (address_id) REFERENCES [Address](address_id)
 );
 
 -- 11. Chi tiết đơn hàng (OrderDetail)
@@ -140,7 +141,7 @@ CREATE TABLE Payment(
     [status] VARCHAR(30) DEFAULT 'PENDING' 	CHECK(status IN('SUCCESS', 'FAILED', 'PENDING')), -- 'PENDING', 'SUCCESS', 'FAILED'
     paid_at DATETIME,
     
-    CONSTRAINT FK_Payment_Order FOREIGN KEY (order_id) REFERENCES [Order](order_id) ON DELETE CASCADE,
+    CONSTRAINT FK_Payment_Order FOREIGN KEY (order_id) REFERENCES [Order](order_id) ON DELETE CASCADE
 );
 
 -- 13. Đánh giá (Review)
@@ -155,3 +156,4 @@ CREATE TABLE Review(
     CONSTRAINT FK_Review_User FOREIGN KEY ([user_id]) REFERENCES [User]([user_id]),
     CONSTRAINT FK_Review_Product FOREIGN KEY (product_id) REFERENCES [Product](product_id) ON DELETE CASCADE
 );
+

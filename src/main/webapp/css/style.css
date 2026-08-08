@@ -1,0 +1,328 @@
+/* ==========================================================
+   FashionHub - style.css
+   ========================================================== */
+
+:root {
+    --primary: #ff5c5c;
+    --primary-dark: #e64545;
+    --dark: #1f2937;
+    --text-muted: #6b7280;
+    --light-bg: #f8f9fb;
+    --radius: 12px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Be Vietnam Pro', 'Segoe UI', sans-serif;
+    color: var(--dark);
+    background-color: #ffffff;
+}
+
+a { transition: all .2s ease-in-out; }
+
+.fw-500 { font-weight: 500; }
+.fw-600 { font-weight: 600; }
+
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+.btn-outline-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+.btn-outline-primary:hover {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+.text-primary { color: var(--primary) !important; }
+
+.bg-light-section { background-color: var(--light-bg); }
+
+.section-title {
+    font-weight: 800;
+    font-size: 1.75rem;
+    position: relative;
+}
+
+/* ============ TOP BAR ============ */
+.top-bar {
+    background-color: var(--dark);
+    color: #fff;
+}
+
+/* ============ HEADER ============ */
+.main-header {
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    z-index: 1030;
+}
+.main-header .navbar-brand {
+    color: var(--dark);
+}
+.main-header .nav-link {
+    color: var(--dark);
+    font-weight: 500;
+    padding: 0.5rem 0.9rem;
+}
+.main-header .nav-link:hover {
+    color: var(--primary);
+}
+.search-form {
+    width: 100%;
+    max-width: 320px;
+}
+.cart-badge {
+    font-size: 0.65rem;
+}
+
+/* ============ HERO BANNER / CAROUSEL ============ */
+.hero-banner .carousel-item img {
+    height: 550px;
+    object-fit: cover;
+    filter: brightness(0.85);
+}
+.hero-banner .carousel-caption {
+    bottom: 50%;
+    transform: translateY(50%);
+    text-align: left;
+    left: 8%;
+    right: auto;
+    max-width: 550px;
+}
+@media (max-width: 768px) {
+    .hero-banner .carousel-item img { height: 320px; }
+    .hero-banner .carousel-caption { left: 5%; right: 5%; }
+    .hero-banner .carousel-caption h1 { font-size: 1.4rem; }
+}
+
+/* ============ DANH MỤC NỔI BẬT ============ */
+.category-card {
+    display: block;
+}
+.category-img-wrap {
+    border-radius: 50%;
+    overflow: hidden;
+    aspect-ratio: 1/1;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    border: 3px solid #fff;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+.category-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.category-card:hover .category-img-wrap {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 20px rgba(255,92,92,0.25);
+}
+
+/* ============ PRODUCT CARD ============ */
+.product-card {
+    background: #fff;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid #eee;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow .25s ease, transform .25s ease;
+}
+.product-card:hover {
+    box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+    transform: translateY(-4px);
+}
+.product-img-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/5;
+    overflow: hidden;
+    background: #f2f2f2;
+}
+.product-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .35s ease;
+}
+.product-card:hover .product-img-wrap img {
+    transform: scale(1.06);
+}
+.badge-product {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 6px;
+    color: #fff;
+}
+.product-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all .25s ease;
+}
+.product-card:hover .product-actions {
+    opacity: 1;
+    transform: translateX(0);
+}
+.btn-icon-round {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--dark);
+}
+.btn-icon-round:hover {
+    background: var(--primary);
+    color: #fff;
+}
+.product-info {
+    padding: 12px 14px 4px;
+    flex-grow: 1;
+}
+.product-name {
+    font-weight: 600;
+    font-size: 0.92rem;
+    margin-bottom: 4px;
+    color: var(--dark);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.4em;
+}
+.product-price {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+.old-price {
+    color: #aaa;
+    font-weight: 400;
+    font-size: 0.82rem;
+    text-decoration: line-through;
+    margin-left: 6px;
+}
+.product-colors {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+.btn-add-cart {
+    border-radius: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 8px;
+}
+
+/* ============ BANNER GIỮA TRANG ============ */
+.mid-banner-link img {
+    height: 320px;
+    object-fit: cover;
+    filter: brightness(0.65);
+}
+.mid-banner-caption {
+    position: absolute;
+    top: 50%;
+    left: 6%;
+    transform: translateY(-50%);
+    max-width: 500px;
+}
+@media (max-width: 768px) {
+    .mid-banner-link img { height: 220px; }
+    .mid-banner-caption h3 { font-size: 1.2rem; }
+}
+
+/* ============ THƯƠNG HIỆU ============ */
+.brand-card {
+    display: flex;
+    height: 80px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: var(--radius);
+    color: var(--dark);
+    letter-spacing: 1px;
+    transition: all .2s ease;
+}
+.brand-card:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    box-shadow: 0 8px 18px rgba(255,92,92,0.15);
+}
+
+/* ============ THEO GIỚI TÍNH ============ */
+.gender-card {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: block;
+}
+.gender-card img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    filter: brightness(0.7);
+    transition: transform .35s ease;
+}
+.gender-card:hover img {
+    transform: scale(1.05);
+}
+.gender-overlay {
+    position: absolute;
+    bottom: 24px;
+    left: 24px;
+}
+
+/* ============ NEWSLETTER ============ */
+.newsletter-section {
+    background: linear-gradient(90deg, var(--primary), #ff8a5c);
+}
+
+/* ============ FOOTER ============ */
+.main-footer {
+    background-color: #16181d;
+    color: #cfd2d8;
+}
+.footer-links li { margin-bottom: 10px; }
+.footer-links a {
+    color: #cfd2d8;
+    text-decoration: none;
+}
+.footer-links a:hover {
+    color: var(--primary);
+    padding-left: 4px;
+}
+.social-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-decoration: none;
+}
+.social-icon:hover {
+    background: var(--primary);
+}
