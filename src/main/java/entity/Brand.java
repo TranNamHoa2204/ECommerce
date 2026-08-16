@@ -1,7 +1,15 @@
 package entity;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name="Brand")
 public class Brand {
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="brand_id")
 	private long brandId;
+	
+	@Column(name="name", nullable=false, length=255)
 	private String name;
 	
 	public long getBrandId() {

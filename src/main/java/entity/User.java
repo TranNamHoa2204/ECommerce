@@ -2,15 +2,44 @@ package entity;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="[User]")
 public class User {
-    private long userId;
+
+	@Id
+	@GeneratedValue(strategy= GenerationType.IDENTITY)
+	@Column(name= "user_id")
+	private long userId;
+
+	@Column(name="full_name", nullable=false, length=100)
     private String fullName;
+
+	@Column(name="email", nullable=false, length=100)
     private String email;
+
+	@Column(name="[password]", nullable=false, length=255)
     private String password;
+
+	@Column(name="phone", length=15)
     private String phone;
+
+	@Column(name="[role]", nullable=false, length=20)
     private String role;
+
+	@Column(name="[status]", nullable=false)
     private boolean status;
+
+	@Column(name="created_at")
     private LocalDateTime createdAt;
+
+
 	public long getUserId() {
 		return userId;
 	}
@@ -59,6 +88,7 @@ public class User {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
+
 	public User(long userId, String fullName, String email, String password, String phone, String role, boolean status,
 			LocalDateTime createdAt) {
 		super();

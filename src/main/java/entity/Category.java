@@ -1,8 +1,19 @@
 package entity;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name="Category")
 public class Category {
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="category_id")
 	private long categoryId;
+	
+	@Column(name="name", nullable=false, length=100)
 	private String name;
+	
+	@Column(name="description", length=255)
 	private String description;
 	public long getCategoryId() {
 		return categoryId;

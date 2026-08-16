@@ -2,14 +2,43 @@ package entity;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="Product")
 public class Product {
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="product_id")
 	private long productId;
+	
+	@ManyToOne
+	@JoinColumn(name="category_id")
 	private Category category;
+	
+	@ManyToOne
+	@JoinColumn(name="brand_id")
 	private Brand brand;
+	
+	@Column(name="name", nullable=false, length=200)
 	private String name;
+	
+	@Column(name="description", columnDefinition="NVARCHAR(MAX)")
 	private String description;
+	
+	@Column(name="status", nullable=false)
 	private boolean status;
+	
+	@Column(name="created_at")
 	private LocalDateTime createdAt;
+	
 	public long getProductId() {
 		return productId;
 	}

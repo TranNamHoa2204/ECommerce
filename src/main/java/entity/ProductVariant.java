@@ -2,13 +2,40 @@ package entity;
 
 import java.math.BigDecimal;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="ProductVariant")
 public class ProductVariant {
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="variant_id")
 	private long variantId;
+	
+	@ManyToOne
+	@JoinColumn(name="product_id", nullable=false)
 	private Product product;
+	
+	@Column(name="size", length=10)
 	private String size;
+	
+	@Column(name="color", length=30)
 	private String color;
+	
+	@Column(name="price", nullable=false, precision=15, scale=2)
 	private BigDecimal price;
+	
+	@Column(name="stock", nullable=false)
 	private int stock;
+	
+	@Column(name="sku", length=50, unique=true)
 	private String sku;
 	
 	public long getVariantId() {

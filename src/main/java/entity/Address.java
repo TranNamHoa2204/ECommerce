@@ -1,14 +1,39 @@
 package entity;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name="Address")
+
 public class Address {
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="address_id")
 	private long addressId;
+	
+	@ManyToOne
+	@JoinColumn(name="[user_id]", nullable=false)
 	private User user;
+	
+	@Column(name="receiver_name", nullable=false, length=100)
 	private String receiverName;
+	
+	@Column(name="phone", nullable=false, length=15)
 	private String phone;
+	
+	@Column(name="province", nullable=false, length=100)
 	private String province;
+	
+	@Column(name="district", nullable=false, length=100)
 	private String district;
+	
+	@Column(name="ward", nullable=false, length=100)
 	private String ward;
+	
+	@Column(name="detail_address", nullable=false, length=255)
 	private String detailAddress;
+	
+	@Column(name="is_default", nullable=false)
 	private boolean isDefault;
 	
 	public long getAddressId() {

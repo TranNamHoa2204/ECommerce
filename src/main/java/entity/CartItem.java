@@ -1,10 +1,25 @@
 package entity;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name="CartItem")
 public class CartItem {
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="cart_item_id")
 	private long cartItemId;
+	
+	@ManyToOne
+	@JoinColumn(name="cart_id", nullable=false)
 	private Cart cart;
+	
+	@ManyToOne
+	@JoinColumn(name="variant_id", nullable=false)
 	private ProductVariant variant;
+	
+	@Column(name="quantity", nullable=false)
 	private int quantity;
+	
 	public long getCartItemId() {
 		return cartItemId;
 	}

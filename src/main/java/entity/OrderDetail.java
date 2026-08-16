@@ -2,13 +2,34 @@ package entity;
 
 import java.math.BigDecimal;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name="OrderDetail")
 public class OrderDetail {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="order_detail_id")
 	private long orderDetailId;
+	
+	@ManyToOne
+	@JoinColumn(name="order_id", nullable=false)
 	private Order order;
+	
+	@ManyToOne
+	@JoinColumn(name="variant_id", nullable=false)
 	private ProductVariant variant;
+	
+	@Column(name="price", nullable=false, precision=15, scale=2)
 	private BigDecimal price;
+	
+	@Column(name="quantity", nullable=false)
 	private int quantity;
+	
+	@Column(name="subtotal", nullable=false, precision=15, scale=2)
 	private BigDecimal subtotal;
+	
 	public long getOrderDetailId() {
 		return orderDetailId;
 	}

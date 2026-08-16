@@ -1,11 +1,28 @@
 package entity;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name="ProductImage")
 public class ProductImage {
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="image_id")
 	private long imageId;
+	
+	@ManyToOne
+	@JoinColumn(name="product_id", nullable=false)
 	private Product product;
+	
+	@Column(name="color", nullable=false, length=30)
 	private String color;
+	
+	@Column(name="image_url", nullable=false, length=255)
 	private String imageUrl;
-	private String displayOrder;
+	
+	@Column(name="display_order", nullable=false)
+	private int displayOrder;
+	
+	@Column(name="is_main", nullable=false)
 	private boolean isMain;
 
 	public long getImageId() {
@@ -40,11 +57,11 @@ public class ProductImage {
 		this.imageUrl = imageUrl;
 	}
 
-	public String getDisplayOrder() {
+	public int getDisplayOrder() {
 		return displayOrder;
 	}
 
-	public void setDisplayOrder(String displayOrder) {
+	public void setDisplayOrder(int displayOrder) {
 		this.displayOrder = displayOrder;
 	}
 
@@ -57,7 +74,7 @@ public class ProductImage {
 	}
 	
 	
-	public ProductImage(long imageId, Product product, String color, String imageUrl, String displayOrder,
+	public ProductImage(long imageId, Product product, String color, String imageUrl, int displayOrder,
 			boolean isMain) {
 		super();
 		this.imageId = imageId;

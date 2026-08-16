@@ -2,13 +2,36 @@ package entity;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
+
+
+
+@Entity
+@Table(name="Review")
 public class Review {
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="review_id")
 	private long reviewId;
+
+	@ManyToOne
+	@JoinColumn(name="[user_id]", nullable=false)
 	private User user;
+
+	@ManyToOne
+	@JoinColumn(name="product_id", nullable=false)
 	private Product product;
+	
+	@Column(name="rating", nullable=false)
 	private int rating;
+
+	@Column(name="comment", nullable=false, columnDefinition="NVARCHAR(MAX)")
 	private String comment;
+
+	@Column(name="created_at")
 	private LocalDateTime createdAt;
+
 	public long getReviewId() {
 		return reviewId;
 	}
@@ -56,7 +79,6 @@ public class Review {
 	}
 	public Review() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	
