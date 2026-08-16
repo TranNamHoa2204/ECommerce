@@ -2,25 +2,29 @@ package service;
 
 import java.util.List;
 
-import dao.ProductVariantDao;
+import org.springframework.stereotype.Service;
+
 import entity.ProductVariant;
+import respository.ProductVariantRepository;
 
-
-
+@Service
 public class ProductVariantService {
-    private ProductVariantDao productVariantDao = new ProductVariantDao();
-
+	private final ProductVariantRepository productVariantRepository;
+	
+	public ProductVariantService(ProductVariantRepository productVariantRepository) {
+		this.productVariantRepository = productVariantRepository;
+	}
+	
     public List<ProductVariant> getVariantsByProductId(long productId) {
-        return productVariantDao.getVariantsByProductId(productId);
+        return productVariantRepository.findByProductProductIdOrderByPriceAsc(productId);
     }
 
     public ProductVariant getVariantById(long variantId) {
-        return productVariantDao.getVariantById(variantId);
+        return productVariantRepository.findById(variantId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy biến thể với mã: " + variantId));
     }
     
-    public List<ProductVariant> findVariant(long proudctId, String size, String color){
-        List<ProductVariant> list = productVariantDao.findVariant(proudctId, size, color);
-        return list;
+    public List<ProductVariant> findVariant(long productId, String size, String color) {
+        return productVariantRepository.findByProductProductIdAndSizeAndColor(productId, size, color);
     }
-
 }

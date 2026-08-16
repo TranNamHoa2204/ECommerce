@@ -1,50 +1,95 @@
 package service;
 
-import dao.PaymentDao;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import entity.Order;
 import entity.Payment;
+import respository.PaymentRepository;
 
+@Service
 public class PaymentService {
-    private final PaymentDao paymentDao = new PaymentDao();
+    private final PaymentRepository paymentRepository;
+    
+    public PaymentService(PaymentRepository paymentRepository) {
+		this.paymentRepository = paymentRepository;
+	}
 
     // Tạo bản ghi thanh toán sau khi đặt hàng thành công
-    public void createPayment(long orderId, String method) {
+    @Transactional
+    public Payment createPayment(long orderId, String method) {
+    	
         if (method == null || (!method.equals("COD") && !method.equals("VNPAY") && !method.equals("BANK_TRANSFER"))) {
             throw new RuntimeException("Phương thức thanh toán không hợp lệ");
         }
+        
+        if(paymentRepository.findByOrderOrderId(orderId).isPresent()) {
+			throw new RuntimeException("Đã tồn tại bản ghi thanh toán cho Order ID: " + orderId);
+		}
 
         Order order = new Order();
         order.setOrderId(orderId);
 
-        Payment payment = new Payment(0, order, method, "PENDING", null);
-        boolean success = paymentDao.createPayment(payment);
-        if (!success) {
-            throw new RuntimeException("Không thể tạo bản ghi thanh toán");
-        }
+        Payment payment = new Payment();
+        payment.setOrder(order);
+        payment.setMethod(method);
+        payment.setStatus("PENDING");
+        payment.setPaidAt(null);
+        
+        return paymentRepository.save(payment);
     }
 
-    // Lấy thông tin thanh toán theo Order ID
     public Payment getPaymentByOrderId(long orderId) {
-        Payment payment = paymentDao.getPaymentByOrderId(orderId);
-        if (payment == null) {
-            throw new RuntimeException("Không tìm thấy thông tin thanh toán");
-        }
+        Payment payment = paymentRepository.findByOrderOrderId(orderId).orElseThrow(() -> new RuntimeException("Không tìm thấy thông tin thanh toán cho Order ID: " + orderId));
         return payment;
     }
 
-    // Cập nhật trạng thái thanh toán thành SUCCESS (dùng cho VNPAY callback / xác nhận)
-    public void markPaymentSuccess(long orderId) {
-        boolean success = paymentDao.updatePaymentStatus(orderId, "SUCCESS");
-        if (!success) {
-            throw new RuntimeException("Không thể cập nhật trạng thái thanh toán");
-        }
+    @Transactional
+    public Payment markPaymentSuccess(long orderId) {
+    	Payment payment = getPaymentByOrderId(orderId);
+    	if(!payment.getStatus().equals("PENDING")) {
+    		throw new RuntimeException("Chỉ có thể cập nhật thanh toán từ trạng thái PENDING");
+    	}
+    	payment.setStatus("SUCCESS");
+    	payment.setPaidAt(java.time.LocalDateTime.now());
+    	
+    	return paymentRepository.save(payment);
     }
 
-    // Cập nhật trạng thái thanh toán thành FAILED
-    public void markPaymentFailed(long orderId) {
-        boolean success = paymentDao.updatePaymentStatus(orderId, "FAILED");
-        if (!success) {
-            throw new RuntimeException("Không thể cập nhật trạng thái thanh toán");
+    @Transactional
+    public Payment markPaymentFailed(long orderId) {
+    	Payment payment = getPaymentByOrderId(orderId);
+    	if(!payment.getStatus().equals("PENDING")) {
+    		throw new RuntimeException("Chỉ có thể cập nhật thanh toán từ trạng thái PENDING");
+    	}
+    	payment.setStatus("FAILED");
+    	payment.setPaidAt(java.time.LocalDateTime.now());
+    	
+    	return paymentRepository.save(payment);
+    }
+    
+    // Kiểm tra trạng thái thanh toán của đơn hàng
+    public boolean isPaymentSuccessful(long orderId) {
+        return paymentRepository.findByOrderOrderId(orderId)
+            .map(payment -> payment.getStatus().equals("SUCCESS"))
+            .orElse(false);
+    }
+    
+    // Cập nhật phương thức thanh toán (nếu cần)
+    @Transactional
+    public Payment updatePaymentMethod(long orderId, String newMethod) {
+        // Validate phương thức thanh toán mới
+        if (newMethod == null || (!newMethod.equals("COD") && !newMethod.equals("VNPAY") && !newMethod.equals("BANK_TRANSFER"))) {
+            throw new IllegalArgumentException("Phương thức thanh toán không hợp lệ");
         }
+        
+        Payment payment = getPaymentByOrderId(orderId);
+        
+        if (payment.getStatus().equals("SUCCESS") || payment.getStatus().equals("FAILED")) {
+            throw new RuntimeException("Không thể thay đổi phương thức thanh toán khi đã xác nhận hoặc thất bại");
+        }
+        
+        payment.setMethod(newMethod);
+        return paymentRepository.save(payment);
     }
 }

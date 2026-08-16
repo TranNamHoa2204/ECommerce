@@ -1,29 +1,34 @@
 package service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import dao.UserDao;
 import entity.User;
+import respository.UserRepository;
 
-
+@Service
 public class UserService {
-	private UserDao userDao = new UserDao();
+	private final UserRepository userRepository;
+
+	public UserService(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 
 	public User getUserById(long userId) {
-		User user = userDao.getUserById(userId);
-		if (user == null) {
-			throw new RuntimeException("User bạn tìm không tồn tại");
-		}
-		return user;
+		return userRepository.findById(userId)
+				.orElseThrow(() -> new RuntimeException("User bạn tìm không tồn tại"));
 	}
 
 	public List<User> getAllUsers() {
-		return userDao.getAllUsers();
+		return userRepository.findAllByOrderByCreatedAtDesc();
 	}
 
-	public void dangKy(String fullname, String email, String password, String phone) {
+	@Transactional
+	public User dangKy(String fullname, String email, String password, String phone) {
 		if (fullname == null || fullname.isBlank()) {
 			throw new RuntimeException("Tên không được để rỗng");
 		}
@@ -35,7 +40,7 @@ public class UserService {
 		if (!email.matches(emailRegex)) {
 			throw new RuntimeException("Email không hợp lệ");
 		}
-		if (userDao.checkEmailExists(email)) {
+		if (userRepository.existsByEmail(email)) {
 			throw new RuntimeException("Email đã được sử dụng");
 		}
 		if (password == null || password.isBlank()) {
@@ -50,8 +55,16 @@ public class UserService {
 
 		// Hash password trước khi lưu vào DB
 		String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-		User user = new User(fullname, email, hashedPassword, phone);
-		userDao.registerUser(user);
+		User user = new User();
+		user.setFullName(fullname);
+		user.setEmail(email);
+		user.setPassword(hashedPassword);
+		user.setPhone(phone);
+		user.setRole("CUSTOMER");
+		user.setStatus(true);
+		user.setCreatedAt(LocalDateTime.now());
+
+		return userRepository.save(user);
 	}
 
 	public User dangNhap(String email, String password) {
@@ -62,11 +75,9 @@ public class UserService {
 			throw new RuntimeException("Mật khẩu không được để rỗng");
 		}
 
-		// Lấy user theo email, không đưa password vào SQL
-		User user = userDao.checkLogin(email);
-		if (user == null) {
-			throw new RuntimeException("Email hoặc mật khẩu không chính xác");
-		}
+		// Lấy user theo email và status active
+		User user = userRepository.findByEmailAndStatusTrue(email)
+				.orElseThrow(() -> new RuntimeException("Email hoặc mật khẩu không chính xác"));
 
 		// Verify password plain-text với hash trong DB
 		if (!BCrypt.checkpw(password, user.getPassword())) {

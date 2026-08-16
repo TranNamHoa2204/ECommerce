@@ -1,21 +1,39 @@
 package service;
 
-import dao.CartDao;
+import java.time.LocalDateTime;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import entity.Cart;
+import entity.User;
+import respository.CartRepository;
+import respository.UserRepository;
 
-
+@Service
 public class CartService {
-    private final CartDao cartDao = new CartDao();
+    private final CartRepository cartRepository;
+    private final UserRepository userRepository;
 
-    public Cart getCartByUserId(long userId) {
-        Cart cart = cartDao.getCartByUserId(userId);
-        if(cart == null){
-            throw new RuntimeException("Không tìm thấy giỏ hàng theo id người dùng");
-        }
-        return cart;
+    public CartService(CartRepository cartRepository, UserRepository userRepository) {
+        this.cartRepository = cartRepository;
+        this.userRepository = userRepository;
     }
 
+    public Cart getCartByUserId(long userId) {
+        return cartRepository.findByUserUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy giỏ hàng theo id người dùng"));
+    }
+
+    @Transactional
     public Cart createCartForUser(long userId) {
-        return cartDao.createCartForUser(userId);
+        return cartRepository.findByUserUserId(userId).orElseGet(() -> {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+            Cart cart = new Cart();
+            cart.setUser(user);
+            cart.setCreatedAt(LocalDateTime.now());
+            return cartRepository.save(cart);
+        });
     }
 }

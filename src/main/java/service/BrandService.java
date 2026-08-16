@@ -2,26 +2,25 @@ package service;
 
 import java.util.List;
 
-import dao.BrandDao;
+import org.springframework.stereotype.Service;
+
 import entity.Brand;
+import respository.BrandRepository;
 
-
-
+@Service
 public class BrandService {
-    private final BrandDao brandDao = new BrandDao();
+    private final BrandRepository brandRepository;
 
-    public List<Brand> getAllBrands(){
-        List<Brand> brands = brandDao.getAllBrands();
-        return brands;
+    public BrandService(BrandRepository brandRepository) {
+        this.brandRepository = brandRepository;
     }
 
-    public Brand getBrandById(long id){
-        Brand brand = brandDao.getBrandById(id);
-        if(brand == null){
-            throw new RuntimeException("Không tìm thấy thương hiệu");
-        }
-        return brand;
+    public List<Brand> getAllBrands() {
+        return brandRepository.findAll();
     }
 
-    
+    public Brand getBrandById(long id) {
+        return brandRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy thương hiệu"));
+    }
 }

@@ -2,40 +2,43 @@ package service;
 
 import java.util.List;
 
-import dao.ProductDao;
+import org.springframework.stereotype.Service;
+
 import entity.Product;
+import respository.ProductRepository;
 
-
+@Service
 public class ProductService {
-    private final ProductDao  productDao = new ProductDao();
+    private final ProductRepository productRepository;
+    
+    public ProductService(ProductRepository productRepository) {
+		this.productRepository = productRepository;
+	}
 
     public List<Product> getAllProducts(){
-        return productDao.getAllActiveProducts();
+        return productRepository.findByStatusTrue();
     }
 
     public Product getProductById(long id){
-        Product products = productDao.getProductById(id);
-        if(products == null){
-            throw new RuntimeException("Không tìm thấy sản phẩm");
-        }
+        Product products = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm với mã: " + id));
         return products;
     }
 
     public List<Product> getProductsByCategoryId(long categoryId){
-        List<Product> products = productDao.getProductsByCategoryId(categoryId);
+        List<Product> products = productRepository.findByCategoryCategoryIdAndStatusTrue(categoryId);
         return products;
     }
 
     public List<Product> getProductsByBrandId(long brandId){
-        List<Product> products = productDao.getProductsByBrandId(brandId);
+        List<Product> products = productRepository.findByBrandBrandIdAndStatusTrue(brandId);
         return products;
     }
 
     public List<Product> searchProductsByName(String keyword){
         if(keyword == null || keyword.isBlank()){
-            return productDao.getAllActiveProducts();
+            return productRepository.findByStatusTrue();
         }
-        List<Product> products = productDao.searchProductsByName(keyword);
+        List<Product> products = productRepository.findByNameContainingIgnoreCaseAndStatusTrue(keyword);
         return products;
     }
 

@@ -2,37 +2,46 @@ package service;
 
 import java.util.List;
 
-import dao.CategoryDao;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import entity.Category;
+import respository.CategoryRepository;
 
-
+@Service
 public class CategoryService {
-    private CategoryDao categoryDao = new CategoryDao();
+    private final CategoryRepository categoryRepository;
 
-    public List<Category> getAllCategories(){
-        return categoryDao.getAllCategories();
+    public CategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
     }
 
-    public Category getCategoryById(long id){
-        Category category = categoryDao.getCategoryById(id);
-        if(category == null){
-            throw new RuntimeException("Không tìm thấy thể loại");
-        }
-        return category;
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
     }
 
+    public Category getCategoryById(long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy thể loại"));
+    }
+
+    @Transactional
     public boolean insertCategory(Category category) {
-        return categoryDao.insertCategory(category);
+        categoryRepository.save(category);
+        return true;
     }   
-    
+
+    @Transactional
     public boolean updateCategory(Category category) {
-        return categoryDao.updateCategory(category);
+        categoryRepository.save(category);
+        return true;
     }
+
+    @Transactional
     public boolean deleteCategory(long id) {
-        Category category = categoryDao.getCategoryById(id);
-        if(category == null){
-            throw new RuntimeException("Không tìm thấy thể loại cần xóa");
-        }
-        return categoryDao.deleteCategory(id);
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy thể loại cần xóa"));
+        categoryRepository.delete(category);
+        return true;
     }
 }
