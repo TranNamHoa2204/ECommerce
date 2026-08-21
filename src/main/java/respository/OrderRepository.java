@@ -16,7 +16,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	List<Order> findByUserUserIdOrderByCreatedAtDesc(long userId);
 	
 	@Modifying
-	@Query("UPDATE Order o SET o.status = 'CANCELED' where o.orderId = :orderId AND o.status IN ('PENDING', 'PROCESSING')")
+	@Query("UPDATE Order o SET o.status = 'CANCELLED' WHERE o.orderId = :orderId AND o.status IN ('PENDING', 'PROCESSING')")
 	int cancelOrder(@Param("orderId") long orderId);
 
 }

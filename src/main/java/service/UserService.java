@@ -3,7 +3,7 @@ package service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,9 +13,11 @@ import respository.UserRepository;
 @Service
 public class UserService {
 	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
 
-	public UserService(UserRepository userRepository) {
+	public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	public User getUserById(long userId) {
@@ -53,8 +55,7 @@ public class UserService {
 			throw new RuntimeException("Số điện thoại không hợp lệ");
 		}
 
-		// Hash password trước khi lưu vào DB
-		String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+		String hashedPassword = passwordEncoder.encode(password);
 		User user = new User();
 		user.setFullName(fullname);
 		user.setEmail(email);
@@ -75,12 +76,10 @@ public class UserService {
 			throw new RuntimeException("Mật khẩu không được để rỗng");
 		}
 
-		// Lấy user theo email và status active
 		User user = userRepository.findByEmailAndStatusTrue(email)
 				.orElseThrow(() -> new RuntimeException("Email hoặc mật khẩu không chính xác"));
 
-		// Verify password plain-text với hash trong DB
-		if (!BCrypt.checkpw(password, user.getPassword())) {
+		if (!passwordEncoder.matches(password, user.getPassword())) {
 			throw new RuntimeException("Email hoặc mật khẩu không chính xác");
 		}
 

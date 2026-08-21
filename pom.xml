@@ -93,13 +93,6 @@
           <scope>test</scope>
       </dependency>
 
-      <!-- BCrypt để hash password -->
-      <dependency>
-        <groupId>org.mindrot</groupId>
-        <artifactId>jbcrypt</artifactId>
-        <version>0.4</version>
-      </dependency>
-
   </dependencies>
 
   <build>
