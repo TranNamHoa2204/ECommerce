@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,7 @@ import entity.OrderDetail;
 import entity.ProductVariant;
 import entity.User;
 import jakarta.validation.Valid;
+import security.CustomUserDetails;
 import service.OrderService;
 
 @RestController
@@ -35,10 +37,13 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping("/user/{userId}")
+    // Đặt hàng — lấy userId từ JWT, không nhận qua path
+    @PostMapping
     public ResponseEntity<Map<String, Long>> createOrder(
-            @PathVariable("userId") long userId,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody CreateOrderRequestDTO request) {
+
+        long userId = userDetails.getUser().getUserId();
 
         User user = new User();
         user.setUserId(userId);
@@ -46,9 +51,15 @@ public class OrderController {
         Address address = new Address();
         address.setAddressId(request.getAddressId());
 
+        // Tính totalAmount từ các item
+        java.math.BigDecimal totalAmount = request.getItems().stream()
+                .map(item -> item.getPrice().multiply(java.math.BigDecimal.valueOf(item.getQuantity())))
+                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
+
         Order order = new Order();
         order.setUser(user);
         order.setAddress(address);
+        order.setTotalAmount(totalAmount.add(request.getShippingFee()));
         order.setShippingFee(request.getShippingFee());
         order.setNote(request.getNote());
 
@@ -69,27 +80,33 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("orderId", orderId));
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<OrderResponseDTO>> getOrdersByUserId(@PathVariable("userId") long userId) {
+    // Lịch sử đơn hàng của user đang đăng nhập
+    @GetMapping
+    public ResponseEntity<List<OrderResponseDTO>> getMyOrders(
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        long userId = userDetails.getUser().getUserId();
         List<OrderResponseDTO> list = orderService.getOrdersByUserId(userId).stream()
                 .map(OrderResponseDTO::fromEntity)
                 .toList();
         return ResponseEntity.ok(list);
     }
 
+    // Chi tiết một đơn hàng
     @GetMapping("/{orderId}/details")
-    public ResponseEntity<List<OrderDetailResponseDTO>> getOrderDetailsByOrderId(@PathVariable("orderId") long orderId) {
+    public ResponseEntity<List<OrderDetailResponseDTO>> getOrderDetailsByOrderId(
+            @PathVariable("orderId") long orderId) {
         List<OrderDetailResponseDTO> details = orderService.getOrderDetailsByOrderId(orderId).stream()
                 .map(OrderDetailResponseDTO::fromEntity)
                 .toList();
         return ResponseEntity.ok(details);
     }
 
+    // Hủy đơn hàng
     @PutMapping("/{orderId}/cancel")
     public ResponseEntity<Map<String, String>> cancelOrder(@PathVariable("orderId") long orderId) {
         boolean success = orderService.cancelOrder(orderId);
         if (!success) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Không thể hủy đơn hàng"));
+            return ResponseEntity.badRequest().body(Map.of("error", "Không thể hủy đơn hàng (chỉ hủy được khi PENDING hoặc PROCESSING)"));
         }
         return ResponseEntity.ok(Map.of("message", "Đã hủy đơn hàng thành công"));
     }
