@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECommerce - Mua Sắm Trực Tuyến Hiện Đại</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+    <!-- Header & Navigation -->
+    <nav class="navbar">
+        <a href="/" class="logo">
+            <i class="fa-solid fa-bolt"></i> E-Store
+        </a>
+
+        <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted)"></i>
+            <input type="text" placeholder="Tìm kiếm sản phẩm, thương hiệu..." onkeyup="if(event.key === 'Enter') loadProducts(this.value)">
+        </div>
+
+        <div class="nav-actions">
+            <a href="#" class="btn-icon"
+                <i class="fa-solid fa-cart-shopping"></i> Giỏ hàng
+                <span class="badge" id="cartBadge">0</span>
+            </a>
+            <a href="/api/users/login" class="btn-icon" style="background: var(--primary); border-color: var(--primary)">
+                <i class="fa-solid fa-user"></i> Đăng nhập
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Banner Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Khám Phá Công Nghệ <span>Thế Hệ Mới</span></h1>
+            <p>Trải nghiệm mua sắm trực tuyến đỉnh cao với hàng nghìn sản phẩm chính hãng, ưu đãi độc quyền và giao hàng siêu tốc.</p>
+            <div class="hero-buttons">
+                <a href="#productsGrid" class="btn-primary">Mua Sắm Ngay <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+        </div>
+        <div class="hero-card">
+            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80" alt="Featured Product">
+        </div>
+    </section>
+
+    <!-- Categories Tag Bar -->
+    <section class="categories-section">
+        <div class="section-title">
+            <span>Danh Mục Nổi Bật</span>
+        </div>
+        <div class="category-tags" id="categoryTags">
+            <!-- Rendered by app.js -->
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section>
+        <div class="products-grid" id="productsGrid">
+            <!-- Rendered by app.js -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 ECommerce Store. All rights reserved. Powered by Spring Boot 3 & JPA.</p>
+    </footer>
+
+    <!-- Toast notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>
