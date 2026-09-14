@@ -247,7 +247,7 @@ INSERT INTO ProductImage (image_id, product_id, color, image_url, display_order,
 INSERT INTO ProductImage (image_id, product_id, color, image_url, display_order, is_main) VALUES (11, 1001, N'Nâu', 'images/products/1001/brown-2.webp', 2, 0);
 INSERT INTO ProductImage (image_id, product_id, color, image_url, display_order, is_main) VALUES (12, 1001, N'Nâu', 'images/products/1001/brown-3.webp', 3, 0);
 INSERT INTO ProductImage (image_id, product_id, color, image_url, display_order, is_main) VALUES (13, 1001, N'Nâu', 'images/products/1001/brown-4.webp', 4, 0);
-INSERT INTO ProductImage (image_id, product_id, color, image_url, display_order, is_main) VALUES (14, 1001, N'Nâu', 'iimages/products/1001/brown-5.webp', 5, 0);
+INSERT INTO ProductImage (image_id, product_id, color, image_url, display_order, is_main) VALUES (14, 1001, N'Nâu', 'images/products/1001/brown-5.webp', 5, 0);
 INSERT INTO ProductImage (image_id, product_id, color, image_url, display_order, is_main) VALUES (15, 1002, N'Nâu', 'images/products/1002/brown-1.webp', 1, 1);
 INSERT INTO ProductImage (image_id, product_id, color, image_url, display_order, is_main) VALUES (16, 1002, N'Nâu', 'images/products/1002/brown-2.webp', 2, 0);
 INSERT INTO ProductImage (image_id, product_id, color, image_url, display_order, is_main) VALUES (17, 1002, N'Nâu', 'images/products/1002/brown-3.webp', 3, 0);
@@ -493,3 +493,12 @@ INSERT INTO ProductImage (image_id, product_id, color, image_url, display_order,
 SET IDENTITY_INSERT ProductImage OFF;
 
 -- DELETE FROM ProductImage;
+
+-- 1. Thêm dữ liệu Người dùng (User)
+-- Bao gồm 1 Admin và 2 Customer (ID tự động tăng từ 1, 2, 3)
+INSERT INTO [User] (full_name, email, [password], phone, [role], [status])
+VALUES 
+(N'Quản Trị Viên', 'admin@shop.com', 'hashed_password_admin123', '0987654321', 'ADMIN', 1),
+(N'Nguyễn Văn A', 'nguyenvana@gmail.com', 'hashed_password_a123', '0901234567', 'CUSTOMER', 1),
+(N'Trần Thị B', 'tranthib@gmail.com', 'hashed_password_b123', '0912345678', 'CUSTOMER', 1);
+GO
